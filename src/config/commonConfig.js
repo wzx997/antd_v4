@@ -1,4 +1,7 @@
-const provinceList = [
+// 通用配置文件
+
+// 城市列表配置
+export const provinceList = [
     {
         value: 'guizhou',
         label: '贵州省',
@@ -94,4 +97,22 @@ const provinceList = [
         ],
     },
 ];
-export default provinceList;
+
+// 级别配置
+export const statusList = [
+    {id: 1, name: '初级程序员'},
+    {id: 2, name: '中级程序员'},
+    {id: 3, name: '高级程序员'},
+    {id: 4, name: '资深程序员'},
+];
+
+// 爱好配置
+export const hobbyList = [
+    {id: 1, name: '唱歌'},
+    {id: 2, name: '跑步'},
+    {id: 3, name: '篮球'},
+    {id: 4, name: '足球'},
+    {id: 5, name: '阅读'},
+    {id: 6, name: '旅游'},
+    {id: 7, name: '其他'},
+];

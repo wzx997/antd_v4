@@ -1,13 +1,11 @@
 import React, {Component} from "react";
 import {Card, Form, Input, Button, Checkbox, message, notification, Select,
-    Switch, DatePicker, Tooltip, AutoComplete, Row, Col, Cascader, Radio, InputNumber
+    DatePicker, Tooltip, AutoComplete, Row, Col, Cascader, Radio, InputNumber
 } from 'antd';
 import {QuestionCircleOutlined} from '@ant-design/icons';
 import moment from "moment";
 
-import provinceList from "../../config/provinceConfig";
-import statusList from "../../config/statusConfig";
-import hobbyList from "../../config/hobbyConfig";
+import {provinceList, statusList, hobbyList} from "../../config/commonConfig";
 import {getAgeByBirthday} from "../../utils/dateUtils";
 
 
@@ -68,7 +66,7 @@ class RegForm extends Component {
     autoAge = (date,) => {
         let birthday = moment(date).format('YYYY-MM-DD');
         let age = getAgeByBirthday(birthday);
-        this.formRef.current.setFieldsValue({age})
+        this.formRef.current.setFieldsValue({age});
     }
 
     // 提交表单，也onFinish={this.onFinish}的方式，但是按钮要改成提交按钮
@@ -85,8 +83,8 @@ class RegForm extends Component {
     // 验证成功的回调
     onFinish = (values) => {
         // 对表单没有处理的数据进行处理
-        // values.status = values.status ? values.status : 0;
-        // values.birthday = values.birthday ? moment(values.birthday).format('YYYY-MM-DD') : '';
+        values.status = values.status ? values.status : 0;
+        values.birthday = values.birthday ? moment(values.birthday).format('YYYY-MM-DD') : '';
 
         console.log('处理后', values);
 
@@ -131,10 +129,11 @@ class RegForm extends Component {
                     <Form
                         {...formItemLayout}
                         ref={this.formRef}
-                        name='ref_form'
+                        name='reg_form'
                         scrollToFirstError
                         onFinish={this.onFinish}
                         onFinishFailed={this.onFinishFailed}
+                        // 初始值，特别是对于一些非字符串的初始值需要放在这里，FormItem中只能初始化字符串
                         initialValues={{city: [], hobby: [], sex: 0, marryStatus: 0, age: 0,}}
                     >
                         <FormItem label="姓名" name="username" initialValue='' hasFeedback

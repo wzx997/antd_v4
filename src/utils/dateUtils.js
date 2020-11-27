@@ -14,7 +14,6 @@ export function formatDate(time) {
 
 //根据生日自动计算年龄
 export function getAgeByBirthday(birthday) {
-  console.log(birthday);
   let returnAge; //返回的数据
 
   let strBirthdayArr = birthday.split("-");
