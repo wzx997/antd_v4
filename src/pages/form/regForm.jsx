@@ -37,7 +37,7 @@ class RegForm extends Component {
     };
 
     // 验证两次输入的密码是否一致
-    compareToFirstPassword = (rule, value, callback) => {
+    compareToFirstPassword = (rule, value,) => {
         if (value && value !== this.formRef.current.getFieldValue('password')) {
             return Promise.reject('两次密码不一致！');
         } else {

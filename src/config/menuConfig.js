@@ -60,6 +60,18 @@ const menuList = [
             },
         ]
     },
+    {
+        title: '表格组件',
+        key: '/table',
+        icon: 'appstore',
+        children: [ // 子菜单列表
+            {
+                title: '基本表格',
+                key: '/table/base-table',
+                icon: 'bars'
+            },
+        ]
+    },
 ]
 
 export default menuList;
