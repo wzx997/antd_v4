@@ -1,14 +1,30 @@
 import React, {Component} from "react";
 import {Link,} from "react-router-dom";
-import {Button, Form, Input, notification} from "antd";
+import {Button, Form, Input, notification, message} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
-import moment from "moment";
+
+import {reqTest} from "../../api";
 
 class LoginForm extends Component {
+    state = {
+        loading: false
+    }
+
     // 验证成功的回调
     onFinish = (values) => {
+        this.setState({loading: true});
         // 对表单没有处理的数据进行处理
-        console.log(values);
+        reqTest(values).then(res => {
+            if (res.code === 0) { // 登录成功
+                message.success('登录成功');
+                this.setState({loading: false});
+            } else {
+                message.error(res.msg);
+                this.setState({loading: false});
+            }
+        }).catch(err => {
+            this.setState({loading: false});
+        });
     };
     // 验证失败的回调
     onFinishFailed = (errorInfo) => {
@@ -20,6 +36,8 @@ class LoginForm extends Component {
         );
     };
     render() {
+        const {loading} = this.state;
+
         return (
             <div>
                 <h2 style={{marginBottom: 60}}>用户登录</h2>
@@ -49,7 +67,12 @@ class LoginForm extends Component {
                         />
                     </Form.Item>
                     <Form.Item>
-                        <Button type="primary" htmlType="submit" className="login-form-button">
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            className="login-form-button"
+                            loading={loading}
+                        >
                             登录
                         </Button>
                     </Form.Item>
