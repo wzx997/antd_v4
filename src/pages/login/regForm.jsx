@@ -1,6 +1,8 @@
 import React, {Component} from "react";
-import {Form, Input, Button, notification,} from 'antd';
+import {Form, Input, Button, notification, message,} from 'antd';
 import {Link} from "react-router-dom";
+
+import {reqReg} from "../../api";
 
 const FormItem = Form.Item;
 const formItemLayout = {//定义文字与表格宽度
@@ -37,8 +39,24 @@ class RegForm extends Component {
 
     // 验证成功的回调
     onFinish = (values) => {
-        // 对表单没有处理的数据进行处理
-        console.log(values);
+        this.setState({loading: true});
+        delete values.confirm; //删除密码确认的这个字段
+
+        reqReg(values).then(res => {//请求接口
+            if (res.code === 0) { // 注册成功
+                message.success('注册成功，1s后跳转到登录页面');
+
+                this.setState({loading: false}); // 取消登录按钮加载
+                setTimeout(() => {// 跳转到login，2s后跳转到登录页面
+                    this.props.history.replace('/login');
+                }, 1000);
+            } else {
+                message.error(res.msg);
+                this.setState({loading: false});
+            }
+        }).catch(_ => {
+            this.setState({loading: false});
+        });
     };
     // 验证失败的回调
     onFinishFailed = (errorInfo) => {
@@ -51,6 +69,8 @@ class RegForm extends Component {
     };
 
     render() {
+        const {loading} = this.state;
+
         return (
             <div>
                 <h2 style={{marginBottom: 30}}>注册新用户</h2>
@@ -64,7 +84,8 @@ class RegForm extends Component {
                 >
                     <FormItem label="用户名" name="username" initialValue='' hasFeedback
                               rules={[{required: true, message: '姓名不能为空！'},
-                                  {max: 20, min: 1, message: '长度必须为1-10个字符！'}]}
+                                  {max: 20, min: 1, message: '长度必须为1-10个字符！'},
+                                  {pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能是字母数字下划线'}]}
                     >
                         <Input placeholder="请输入用户名(字母、数字、下划线)" />
                     </FormItem>
@@ -96,7 +117,7 @@ class RegForm extends Component {
                     </FormItem>
 
                     <Form.Item {...tailFormItemLayout}>
-                        <Button type="primary" htmlType="submit">注册</Button>
+                        <Button type="primary" htmlType="submit" loading={loading}>注册</Button>
                         <Button  onClick={ () => this.formRef.current.resetFields()} style={{margin: 25}}>重置</Button>
                         <Link to='/login' style={{fontSize: 16}}>旧账号登录</Link>
                     </Form.Item>

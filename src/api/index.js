@@ -14,3 +14,8 @@ export const reqTest = (data) => ajax(
 export const reqLogin = (data) => ajax(
     BASE + '/login', data, 'POST'
 );
+
+//登录接口
+export const reqReg = (data) => ajax(
+    BASE + '/reg', data, 'POST'
+);
