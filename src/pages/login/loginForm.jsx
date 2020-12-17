@@ -1,9 +1,11 @@
 import React, {Component} from "react";
-import {Link,} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import {Button, Form, Input, notification, message} from "antd";
 import {LockOutlined, UserOutlined} from "@ant-design/icons";
 
-import {reqTest} from "../../api";
+import {reqLogin} from "../../api";
+import memoryUtils from "../../utils/memoryUtils";
+import storageUtils from "../../utils/storageUtils";
 
 class LoginForm extends Component {
     state = {
@@ -14,15 +16,21 @@ class LoginForm extends Component {
     onFinish = (values) => {
         this.setState({loading: true});
         // 对表单没有处理的数据进行处理
-        reqTest(values).then(res => {
+        reqLogin(values).then(res => {
             if (res.code === 0) { // 登录成功
                 message.success('登录成功');
-                this.setState({loading: false});
+
+                const user = res.data;
+                memoryUtils.user = user; // 保存在内存中
+                storageUtils.saveUser(user); // 保存到local中
+
+                this.setState({loading: false}); // 取消登录按钮加载
+                this.props.history.replace('/');// 跳转到管理界面 (不需要再回退回到登陆)
             } else {
                 message.error(res.msg);
                 this.setState({loading: false});
             }
-        }).catch(err => {
+        }).catch(_ => {
             this.setState({loading: false});
         });
     };
@@ -36,6 +44,12 @@ class LoginForm extends Component {
         );
     };
     render() {
+        // 如果用户已经登陆, 自动跳转到管理界面
+        const user = memoryUtils.user
+        if(user && user._id) {
+            return <Redirect to='/'/>
+        }
+
         const {loading} = this.state;
 
         return (

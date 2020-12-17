@@ -1,10 +1,12 @@
 import React, {Component} from "react";
 import {withRouter} from "react-router-dom";
-import { Modal} from "antd";
+import {message, Modal} from "antd";
 
 import "./index.less";
 import LinkButton from "../link-button";
 import {formatDate} from "../../utils/dateUtils";
+import memoryUtils from "../../utils/memoryUtils";
+import storageUtils from "../../utils/storageUtils";
 import menuList from "../../config/menuConfig";
 
 
@@ -53,6 +55,10 @@ class Header extends Component{
             content: '确定退出吗?',
             onOk: () => {
                 // 删除保存的user数据
+                storageUtils.removeUser();
+                memoryUtils.user = {};
+
+                message.success('退出成功');
 
                 // 跳转到login
                 this.props.history.replace('/');
@@ -75,11 +81,12 @@ class Header extends Component{
     render() {
         const {currentTime} = this.state;
         const title = this.getTitle();
+        const username = memoryUtils.user.username;
 
         return (
             <div className="header">
                 <div className="header-top">
-                    <span>欢迎您, admin</span>
+                    <span>欢迎您, {username}</span>
                     <LinkButton onClick={this.logout}>退出</LinkButton>
                 </div>
                 <div className="header-bottom">

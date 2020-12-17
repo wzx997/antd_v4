@@ -3,6 +3,7 @@ import {Route, Redirect, Switch} from "react-router-dom";
 import {Row, Col, Layout } from "antd";
 
 import "./admin.less";
+import memoryUtils from "../../utils/memoryUtils";
 import LeftNav from "../../components/left-nav";
 import Header from "../../components/header";
 import Home from "../home";
@@ -22,6 +23,14 @@ const {Footer} = Layout;
 
 class Admin extends Component {
     render() {
+        const user = memoryUtils.user;
+        // console.log(user);
+        // 如果内存没有存储user ==> 当前没有登陆
+        if(!user || !user.id) {
+            // 自动跳转到登陆(在render()中)
+            return <Redirect to='/login'/>
+        }
+
         return (
             <Row className="container" >
                 <Col span={4} className="nav-left">

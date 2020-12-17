@@ -12,12 +12,12 @@ import memoryUtils from "../utils/memoryUtils";
 //设置请求头
 axios.defaults.headers.common['auth-token'] = memoryUtils.user.token ? memoryUtils.user.token : '';
 
-export default function ajax(url, data={}, type='GET') {
-    return new Promise(( resolve, reject) => {
+export default function ajax(url, data = {}, type = 'GET') {
+    return new Promise((resolve, reject) => {
         let promise;
 
         // 1. 执行异步ajax请求
-        if(type==='GET') { // 发GET请求
+        if (type === 'GET') { // 发GET请求
             promise = axios.get(url, { // 配置对象
                 params: data // 指定请求参数
             });
@@ -31,15 +31,15 @@ export default function ajax(url, data={}, type='GET') {
                 resolve(resData);
             } else {
                 reject(resData.msg);
-                if (resData.code === 10002)  { // 登录过期
+                if (resData.code === 10002) { // 登录过期
                     message.error('登录已过期，2s后跳转到登录页面！');
                     // 删除保存的user数据
                     storageUtils.removeUser();
                     memoryUtils.user = {};
 
-                    setTimeout(() =>{// 跳转到login，2s后跳转到登录页面
+                    setTimeout(() => {// 跳转到login，2s后跳转到登录页面
                         window.location.href = '/login';
-                    },2000)
+                    }, 2000)
                 } else {
                     message.error(resData.msg);
                 }

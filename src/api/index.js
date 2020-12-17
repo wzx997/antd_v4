@@ -3,10 +3,14 @@
  */
 import ajax from "./ajax";
 
-// const BASE = 'http://localhost:5000'
 const BASE = 'http://www.tp6-test.com'
 
-//登录接口
+//测试接口
 export const reqTest = (data) => ajax(
     BASE + '/test2', data, 'POST'
+);
+
+//登录接口
+export const reqLogin = (data) => ajax(
+    BASE + '/login', data, 'POST'
 );
