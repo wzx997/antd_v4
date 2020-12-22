@@ -19,3 +19,8 @@ export const reqLogin = (data) => ajax(
 export const reqReg = (data) => ajax(
     BASE + '/reg', data, 'POST'
 );
+
+//获取用户列表
+export const reqGetUserList = (data) => ajax(
+    BASE + '/getUserList', data, 'POST'
+);

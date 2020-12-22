@@ -9,10 +9,11 @@ import storageUtils from "../utils/storageUtils";
 import memoryUtils from "../utils/memoryUtils";
 
 
-//设置请求头
-axios.defaults.headers.common['auth-token'] = memoryUtils.user.token ? memoryUtils.user.token : '';
 
 export default function ajax(url, data = {}, type = 'GET') {
+    //设置请求头
+    axios.defaults.headers.common['auth-token'] = memoryUtils.user.token ? memoryUtils.user.token : '';
+
     return new Promise((resolve, reject) => {
         let promise;
 

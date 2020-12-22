@@ -72,6 +72,11 @@ const menuList = [
             },
         ]
     },
+    {
+        title: '用户列表',
+        key: '/userList',
+        icon: 'appstore',
+    },
 ]
 
 export default menuList;

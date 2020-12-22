@@ -17,6 +17,7 @@ import MyTabs from "../ui/tabs/myTabs";
 import Login from "../form/login";
 import RegForm from "../form/regForm";
 import BaseTables from "../table/base-tables";
+import UserList from "../user/userList";
 
 
 const {Footer} = Layout;
@@ -52,6 +53,7 @@ class Admin extends Component {
                             <Route path='/form/login' component={Login}/>
                             <Route path='/form/reg' component={RegForm}/>
                             <Route path='/table/base-table' component={BaseTables}/>
+                            <Route path='/userList' component={UserList}/>
                             <Route component={NotFound}/>
                         </Switch>
                     </Row>
