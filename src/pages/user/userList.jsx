@@ -1,11 +1,12 @@
 import React, {Component} from "react";
-import {Card, Table, message, Divider} from "antd";
+import {Card, Table, message, Divider, Modal} from "antd";
 import moment from "moment";
 
 import LinkButton from "../../components/link-button";
 import UserListSearchForm from "./userListSearchForm";
+import UserUpdateForm from "./userUpdateForm";
 import {PAGE_SIZE} from "../../utils/constants";
-import {reqGetUserList} from "../../api";
+import {reqGetUserList, reqUpdateUser} from "../../api";
 
 
 class UserList extends Component {
@@ -15,6 +16,8 @@ class UserList extends Component {
         userList: [], // 商品的数组
         loading: false, // 是否正在加载中
         pageNum: 1,
+        visible: false,
+        confirmLoading: false
     }
 
     /**
@@ -29,11 +32,11 @@ class UserList extends Component {
             {
                 width: 150,
                 title: '操作',
-                render: (data) => (
+                render: (user) => (
                     <span>
                         <LinkButton>详情</LinkButton>
                         <Divider type='vertical'/>
-                        <LinkButton>修改</LinkButton>
+                        <LinkButton onClick={() => this.openUserUpdateForm(user)} >更新</LinkButton>
                     </span>
                 )
             },
@@ -57,7 +60,7 @@ class UserList extends Component {
         };
 
         reqGetUserList(data).then(res => {
-            if (res.code === 0) { // 登录成功
+            if (res.code === 0) { // 获取成功
                 const {total, list} = res.data;
                 this.setState({
                     total,
@@ -93,6 +96,41 @@ class UserList extends Component {
     }
 
     /**
+     * 打开更新模态框
+     * @param user
+     */
+    openUserUpdateForm = (user) => {
+        this.user = user;
+        this.setState({visible: true});
+    }
+
+    /**
+     * 更新用户信息，仅更新手机和邮箱
+     */
+    userUpdateSubmit = () => {
+        let mobile = this.UserUpdateForm.current.getFieldValue('mobile');
+        let email = this.UserUpdateForm.current.getFieldValue('email');
+
+        // 需要更新的数据
+        let data = {id: this.user.id, mobile, email};
+
+        this.setState({confirmLoading: true});
+        reqUpdateUser(data).then(res => {
+            if (res.code === 0) { // 更新成功
+                message.success('更新成功');
+                this.UserUpdateForm.current.resetFields(); // 重置表单
+                this.setState({confirmLoading: false, visible: false});
+                this.getUserList(); //请求更新后的列表
+            } else {
+                message.error('更新失败');
+                this.setState({confirmLoading: false});
+            }
+        }).catch(_ => {
+            this.setState({confirmLoading: false});
+        });
+    }
+
+    /**
      * 点击重置按钮的回调事件
      */
     searchReset = () => {
@@ -109,7 +147,7 @@ class UserList extends Component {
     }
 
     render() {
-        const {userList, total, loading, pageNum} = this.state;
+        const {userList, total, loading, pageNum, visible, confirmLoading} = this.state;
 
         //定义card的标题
         const title = (
@@ -138,6 +176,23 @@ class UserList extends Component {
                     />
                 </Card>
 
+                <Modal
+                    title="更新用户信息"
+                    visible={visible}
+                    confirmLoading={confirmLoading}
+                    onOk={this.userUpdateSubmit}
+                    onCancel={()=>{
+                        this.UserUpdateForm.current.resetFields();
+                        this.setState({
+                            visible: false,
+                        });
+                    }}
+                >
+                    <UserUpdateForm
+                        setForm={(form) => {this.UserUpdateForm = form}}
+                        user={this.user}
+                    />
+                </Modal>
             </div>
         );
     }

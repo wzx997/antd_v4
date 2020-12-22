@@ -24,3 +24,8 @@ export const reqReg = (data) => ajax(
 export const reqGetUserList = (data) => ajax(
     BASE + '/getUserList', data, 'POST'
 );
+
+//更新用户信息
+export const reqUpdateUser = (data) => ajax(
+    BASE + '/updateUser', data, 'POST'
+);
