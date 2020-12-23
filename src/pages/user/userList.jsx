@@ -1,12 +1,6 @@
 import React, {Component} from "react";
-import {Card, Table, message, Divider, Modal} from "antd";
-import moment from "moment";
+import {Card, Table, Divider, Modal, Form, Input} from "antd";
 
-import LinkButton from "../../components/link-button";
-import UserListSearchForm from "./userListSearchForm";
-import UserUpdateForm from "./userUpdateForm";
-import {PAGE_SIZE} from "../../utils/constants";
-import {reqGetUserList, reqUpdateUser} from "../../api";
 
 
 class UserList extends Component {
@@ -34,66 +28,41 @@ class UserList extends Component {
                 title: '操作',
                 render: (user) => (
                     <span>
-                        <LinkButton>详情</LinkButton>
+                        <span style={{color: '#1890ff', cursor: 'pointer'}}>详情</span>
                         <Divider type='vertical'/>
-                        <LinkButton onClick={() => this.openUserUpdateForm(user)} >更新</LinkButton>
+                        <span onClick={() => this.openUserUpdateForm(user)} style={{color: '#1890ff', cursor: 'pointer'}}>更新</span>
                     </span>
                 )
             },
         ];
     }
 
-    /**
-     * 请求接口获取用户列表数据
-     * @param pageNum
-     */
-    getUserList = (pageNum = 1) => {
-        this.setState({pageNum, loading: true});
-        let data = {
-            username: this.username ? this.username : '',
-            start_time: this.startTime ? this.startTime : '',
-            end_time: this.endTime ? this.endTime : '',
-            page_num: pageNum,
-            page_size: PAGE_SIZE,
-            sort_key: this.sortKey ? this.sortKey : '',
-            sort_value: this.sortValue ? this.sortValue : ''
-        };
-
-        reqGetUserList(data).then(res => {
-            if (res.code === 0) { // 获取成功
-                const {total, list} = res.data;
-                this.setState({
-                    total,
-                    userList: list,
-                    loading: false
-                });
-            } else {
-                message.error('用户列表获取失败');
-                this.setState({loading: false});
+    initData = () => {
+        this.userList = [
+            {
+                "id": 1,
+                "username": "admin",
+                "mobile": "18300961222",
+                "email": "1181659294@qq.com",
+                "create_time": "2020-12-03 17:50:00"
+            },
+            {
+                "id": 2,
+                "username": "admin2",
+                "mobile": "18300851725",
+                "email": "sdad@qq.com",
+                "create_time": "2020-12-03 18:05:58"
+            },
+            {
+                "id": 5,
+                "username": "admin3",
+                "mobile": "18300961210",
+                "email": "1181659294@qq.com",
+                "create_time": "2020-12-17 17:56:57"
             }
-        }).catch(_ => {
-            this.setState({total: 0, userList: [], loading: false});
-        });
+        ]
     }
 
-    /**
-     * 点击搜索按钮的回调事件
-     */
-    searchUserList = () => {
-        let username = this.userListSearchForm.current.getFieldValue('username');
-        let timeRange = this.userListSearchForm.current.getFieldValue('time');
-
-        let startTime = '';
-        let endTime = '';
-        if (timeRange) {
-            startTime = moment(timeRange[0]).format('YYYY-MM-DD');
-            endTime = moment(timeRange[1]).format('YYYY-MM-DD');
-        }
-        this.username = username ? username : '';
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.getUserList();
-    }
 
     /**
      * 打开更新模态框
@@ -113,66 +82,26 @@ class UserList extends Component {
 
         // 需要更新的数据
         let data = {id: this.user.id, mobile, email};
-
-        this.setState({confirmLoading: true});
-        reqUpdateUser(data).then(res => {
-            if (res.code === 0) { // 更新成功
-                message.success('更新成功');
-                this.UserUpdateForm.current.resetFields(); // 重置表单
-                this.setState({confirmLoading: false, visible: false});
-                this.getUserList(); //请求更新后的列表
-            } else {
-                message.error('更新失败');
-                this.setState({confirmLoading: false});
-            }
-        }).catch(_ => {
-            this.setState({confirmLoading: false});
-        });
+        console.log(data);
     }
 
-    /**
-     * 点击重置按钮的回调事件
-     */
-    searchReset = () => {
-        this.userListSearchForm.current.resetFields();
-        this.searchUserList();
-    }
-
-    componentDidMount() {
-        this.getUserList();
-    }
 
     componentWillMount() {
         this.initColumns();
+        this.initData();
     }
 
     render() {
-        const {userList, total, loading, pageNum, visible, confirmLoading} = this.state;
+        const {visible, confirmLoading} = this.state;
 
-        //定义card的标题
-        const title = (
-            <UserListSearchForm
-                setForm={(form) => {this.userListSearchForm = form}}
-                searchSubmit={this.searchUserList}
-                searchReset={this.searchReset}
-            />
-        );
 
         return (
             <div style={{width: '100%'}}>
-                <Card title={title}>
+                <Card >
                     <Table
                         rowKey='id'
-                        loading={loading}
-                        dataSource={userList}
+                        dataSource={this.userList}
                         columns={this.columns}
-                        pagination={{
-                            current: pageNum,
-                            total,
-                            defaultPageSize: PAGE_SIZE,
-                            showQuickJumper: true,
-                            onChange: this.getUserList
-                        }}
                     />
                 </Card>
 
@@ -199,3 +128,62 @@ class UserList extends Component {
 }
 
 export default UserList;
+
+const layout = {
+    labelCol: {span: 4,},
+    wrapperCol: {span: 15,},
+};
+
+class UserUpdateForm extends Component {
+    formRef = React.createRef(); // 创建ref对象
+
+    componentWillMount() {
+        this.props.setForm(this.formRef);
+    }
+
+    render() {
+        const {user} = this.props;
+
+        console.log(user);
+
+        return (
+            <Form {...layout} name="normal_login" ref={this.formRef}>
+                <Form.Item
+                    name="username"
+                    label='用户名'
+                    initialValue={user.username}
+                >
+                    <Input disabled/>
+                </Form.Item>
+
+                <Form.Item
+                    label="手机"
+                    name="mobile"
+                    initialValue={user.mobile} hasFeedback
+                    rules={[{pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, message: '请输入正确的手机号'},]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label='邮箱'
+                    name="email"
+                    initialValue={user.email}
+                    hasFeedback
+                    rules={[{type: 'email', message: '邮箱地址格式不正确！'}]}
+                >
+                    <Input placeholder="请输入邮箱地址"/>
+                </Form.Item>
+
+                <Form.Item
+                    name="create_time"
+                    label='注册时间'
+                    initialValue={user.create_time}
+                >
+                    <Input disabled/>
+                </Form.Item>
+
+            </Form>
+        );
+    }
+}
