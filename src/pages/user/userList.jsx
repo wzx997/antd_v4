@@ -187,6 +187,9 @@ class UserList extends Component {
                             visible: false,
                         });
                     }}
+                    // 销毁modal内的元素，否则表单数据不正确，是上一次的值
+                    // antd4需要这样干，antd3不需要
+                    destroyOnClose
                 >
                     <UserUpdateForm
                         setForm={(form) => {this.UserUpdateForm = form}}
