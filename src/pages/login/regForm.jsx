@@ -105,13 +105,15 @@ class RegForm extends Component {
                     </FormItem>
 
                     <FormItem label="手机" name="mobile" initialValue='' hasFeedback
-                              rules={[{pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, message: '请输入正确的手机号'},]}
+                              rules={[{required: true, message: '姓名不能为空！'},
+                                  {pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, message: '请输入正确的手机号'},]}
                     >
                         <Input placeholder="请输入手机号码"/>
                     </FormItem>
 
                     <FormItem label='邮箱' name="email" initialValue='' hasFeedback
-                              rules={[{type: 'email', message: '邮箱地址格式不正确！'}]}
+                              rules={[{required: true, message: '姓名不能为空！'},
+                                  {type: 'email', message: '邮箱地址格式不正确！'}]}
                     >
                         <Input placeholder="请输入邮箱地址"/>
                     </FormItem>
