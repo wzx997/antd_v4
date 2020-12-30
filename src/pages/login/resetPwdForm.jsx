@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Form, Input, Button, notification, message, Row, Col, Tooltip} from 'antd';
+import {Form, Input, Button, notification, message, Row, Col} from 'antd';
 import {Link} from "react-router-dom";
 
 import {reqGetCodeByEmail, reqResetPassword} from "../../api";
