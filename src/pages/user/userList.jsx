@@ -122,7 +122,7 @@ class UserList extends Component {
                 this.setState({confirmLoading: false, visible: false});
                 this.getUserList(); //请求更新后的列表
             } else {
-                message.error('更新失败');
+                message.error(res.msg);
                 this.setState({confirmLoading: false});
             }
         }).catch(_ => {

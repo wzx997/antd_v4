@@ -29,3 +29,13 @@ export const reqGetUserList = (data) => ajax(
 export const reqUpdateUser = (data) => ajax(
     BASE + '/updateUser', data, 'POST'
 );
+
+// 获取验证码
+export const reqGetCodeByEmail = (data) => ajax(
+    BASE + '/getCodeByEmail', data, 'POST'
+);
+
+// 重置密码
+export const reqResetPassword = (data) => ajax(
+    BASE + '/resetPassword', data, 'POST'
+);
