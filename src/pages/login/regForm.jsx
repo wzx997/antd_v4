@@ -83,7 +83,7 @@ class RegForm extends Component {
                     onFinishFailed={this.onFinishFailed}
                 >
                     <FormItem label="用户名" name="username" initialValue='' hasFeedback
-                              rules={[{required: true, message: '姓名不能为空！'},
+                              rules={[{required: true, message: '用户名不能为空'},
                                   {max: 20, min: 1, message: '长度必须为1-10个字符！'},
                                   {pattern: /^[a-zA-Z0-9_]+$/, message: '用户名只能是字母数字下划线'}]}
                     >
@@ -91,36 +91,36 @@ class RegForm extends Component {
                     </FormItem>
 
                     <FormItem label='密码' name="password" initialValue='' hasFeedback
-                              rules={[{required: true, message: '密码不能为空！'},
-                                  {max: 16, min: 6, message: '长度必须为6-16个字符！'}]}
+                              rules={[{required: true, message: '密码不能为空'},
+                                  {max: 16, min: 6, message: '长度必须为6-16个字符'}]}
                     >
                         <Input.Password placeholder="请输入密码" />
                     </FormItem>
 
                     <FormItem label='确认密码' name="confirm" initialValue='' hasFeedback
-                              rules={[{required: true, message: '确认密码不能为空！'},
+                              rules={[{required: true, message: '确认密码不能为空'},
                                   {validator: this.compareToFirstPassword}]}
                     >
                         <Input.Password placeholder="请再次输入密码" />
                     </FormItem>
 
                     <FormItem label="手机" name="mobile" initialValue='' hasFeedback
-                              rules={[{required: true, message: '姓名不能为空！'},
+                              rules={[{required: true, message: '手机号不能为空'},
                                   {pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, message: '请输入正确的手机号'},]}
                     >
                         <Input placeholder="请输入手机号码"/>
                     </FormItem>
 
                     <FormItem label='邮箱' name="email" initialValue='' hasFeedback
-                              rules={[{required: true, message: '姓名不能为空！'},
-                                  {type: 'email', message: '邮箱地址格式不正确！'}]}
+                              rules={[{required: true, message: '邮箱地址不能为空'},
+                                  {type: 'email', message: '邮箱地址格式不正确'}]}
                     >
                         <Input placeholder="请输入邮箱地址"/>
                     </FormItem>
 
                     <Form.Item {...tailFormItemLayout}>
                         <Button type="primary" htmlType="submit" loading={loading}>注册</Button>
-                        <Button  onClick={ () => this.formRef.current.resetFields()} style={{margin: 25}}>重置</Button>
+                        <Button  onClick={ () => this.formRef.current.resetFields()} style={{margin: '0 25px'}}>重置</Button>
                         <Link to='/login' style={{fontSize: 16}}>旧账号登录</Link>
                     </Form.Item>
 
