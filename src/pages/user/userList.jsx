@@ -12,12 +12,12 @@ import {reqGetUserList, reqUpdateUser} from "../../api";
 class UserList extends Component {
     formRef = React.createRef();
     state = {
-        total: 0, // 商品的总数量
-        userList: [], // 商品的数组
-        loading: false, // 是否正在加载中
-        pageNum: 1,
-        visible: false,
-        confirmLoading: false
+        total: 0, // 用户总数
+        userList: [], // 用户列表
+        loading: false, // 用户列表是否是加载状态
+        pageNum: 1, // 页面数
+        visible: false, // 更新模态框是否显示
+        confirmLoading: false // 更新按钮加载状态
     }
 
     /**
@@ -108,8 +108,8 @@ class UserList extends Component {
      * 更新用户信息，仅更新手机和邮箱
      */
     userUpdateSubmit = () => {
-        let mobile = this.UserUpdateForm.current.getFieldValue('mobile');
-        let email = this.UserUpdateForm.current.getFieldValue('email');
+        let mobile = this.userUpdateForm.current.getFieldValue('mobile');
+        let email = this.userUpdateForm.current.getFieldValue('email');
 
         // 需要更新的数据
         let data = {id: this.user.id, mobile, email};
@@ -118,7 +118,7 @@ class UserList extends Component {
         reqUpdateUser(data).then(res => {
             if (res.code === 0) { // 更新成功
                 message.success('更新成功');
-                this.UserUpdateForm.current.resetFields(); // 重置表单
+                this.userUpdateForm.current.resetFields(); // 重置表单
                 this.setState({confirmLoading: false, visible: false});
                 this.getUserList(); //请求更新后的列表
             } else {
@@ -182,7 +182,7 @@ class UserList extends Component {
                     confirmLoading={confirmLoading}
                     onOk={this.userUpdateSubmit}
                     onCancel={()=>{
-                        this.UserUpdateForm.current.resetFields();
+                        this.userUpdateForm.current.resetFields();
                         this.setState({
                             visible: false,
                         });
@@ -192,7 +192,7 @@ class UserList extends Component {
                     destroyOnClose
                 >
                     <UserUpdateForm
-                        setForm={(form) => {this.UserUpdateForm = form}}
+                        setForm={(form) => {this.userUpdateForm = form}}
                         user={this.user}
                     />
                 </Modal>
