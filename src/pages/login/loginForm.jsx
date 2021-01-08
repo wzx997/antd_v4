@@ -15,7 +15,7 @@ class LoginForm extends Component {
     // 验证成功的回调
     onFinish = (values) => {
         this.setState({loading: true});
-        // 对表单没有处理的数据进行处理
+
         reqLogin(values).then(res => {
             if (res.code === 0) { // 登录成功
                 message.success('登录成功');
@@ -25,7 +25,7 @@ class LoginForm extends Component {
                 storageUtils.saveUser(user); // 保存到local中
 
                 this.setState({loading: false}); // 取消登录按钮加载
-                this.props.history.replace('/');// 跳转到管理界面 (不需要再回退回到登陆)
+                this.props.history.replace('/');// 跳转到管理界面 (不需要再回退回到登陆，该组件已经是路由组件可以这样，否则需要引入高阶组件包装)
             } else {
                 message.error(res.msg);
                 this.setState({loading: false});
@@ -46,7 +46,7 @@ class LoginForm extends Component {
     render() {
         // 如果用户已经登陆, 自动跳转到管理界面
         const user = memoryUtils.user
-        if(user && user._id) {
+        if(user && user.id) {
             return <Redirect to='/'/>
         }
 
@@ -57,7 +57,6 @@ class LoginForm extends Component {
                 <h2 style={{marginBottom: 60}}>用户登录</h2>
                 <Form
                     name="login_form"
-                    // 初始值，特别是对于一些非字符串的初始值需要放在这里，FormItem中只能初始化字符串
                     scrollToFirstError
                     onFinish={this.onFinish}
                     onFinishFailed={this.onFinishFailed}

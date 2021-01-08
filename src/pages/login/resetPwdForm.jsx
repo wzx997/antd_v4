@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Form, Input, Button, notification, message, Row, Col} from 'antd';
+import {Form, Input, Button, notification, message, Row, Col, Tooltip } from 'antd';
 import {Link} from "react-router-dom";
 
 import {reqGetCodeByEmail, reqResetPassword} from "../../api";
@@ -26,8 +26,7 @@ class ResetPwdForm extends Component {
     formRef = React.createRef(); // 创建ref对象
     state = {
         loading: false,
-        codeLoading: false,
-        codeDisabled: true
+        codeLoading: false
     };
 
     // 获取验证码
@@ -41,7 +40,7 @@ class ResetPwdForm extends Component {
                 if (res.code === 0) { // 发送成功
                     message.success('验证码发送成功，请到邮箱查看', 2);
 
-                    this.setState({codeLoading: false}); // 取消登录按钮加载
+                    this.setState({codeLoading: false});
                 } else {
                     message.error(res.msg);
                     this.setState({codeLoading: false});
@@ -67,7 +66,7 @@ class ResetPwdForm extends Component {
                     this.props.history.replace('/login');
                 }, 2000);
             } else {
-                message.error('重置密码失败', 2);
+                message.error(res.msg, 2);
                 this.setState({loading: false});
             }
         }).catch(_ => {
@@ -86,7 +85,7 @@ class ResetPwdForm extends Component {
         );
     };
     render() {
-        const {loading, codeLoading, codeDisabled} = this.state;
+        const {loading, codeLoading} = this.state;
 
         return (
             <div>
@@ -124,13 +123,15 @@ class ResetPwdForm extends Component {
                                 </FormItem>
                             </Col>
                             <Col span={12}>
-                                <Button
-                                    style={{marginLeft: 30}}
-                                    loading={codeLoading}
-                                    onClick={this.getCode}
-                                >
-                                    获取验证码
-                                </Button>
+                                <Tooltip title='请输入用户名与邮箱地址获取验证码'>
+                                    <Button
+                                        style={{marginLeft: 30}}
+                                        loading={codeLoading}
+                                        onClick={this.getCode}
+                                    >
+                                        获取验证码
+                                    </Button>
+                                </Tooltip>
                             </Col>
                         </Row>
                     </FormItem>
