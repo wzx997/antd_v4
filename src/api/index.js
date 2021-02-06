@@ -3,7 +3,8 @@
  */
 import ajax from "./ajax";
 
-const BASE = 'http://www.tp6-test.com'
+const BASE = 'http://www.tp6-test.com'; //本次测试用的地址
+// const BASE = 'api'; // 打包部署后端的地址，加上api到nginx上，匹配后代理到后端项目
 
 //测试接口
 export const reqTest = (data) => ajax(
